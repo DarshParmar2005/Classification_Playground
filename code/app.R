@@ -40,8 +40,8 @@ df_train = df[-test_id,]
 
 
 # xgb-specific data
-X_train <- model.matrix(survived ~ . - 1, data = df_train)
-X_test <- model.matrix(survived ~ . - 1, data = df_test)
+X_train = model.matrix(survived ~ . - 1, data = df_train)
+X_test = model.matrix(survived ~ . - 1, data = df_test)
 y_train = df_train$survived
 y_test = df_test$survived
 
@@ -216,11 +216,11 @@ lolipop_plot_maker = function(model, test_data, model_type,
   # calculating performance metrics
   accuracy = cm_test$overall["Accuracy"]
   error = 1-accuracy
-  balanced_accuracy <- cm_test$byClass["Balanced Accuracy"]
-  sensitivity <- cm_test$byClass["Sensitivity"]
-  specificity <- cm_test$byClass["Specificity"]
-  precision <- cm_test$byClass["Pos Pred Value"]
-  f1_score <- 2 * (precision * sensitivity) / (precision + sensitivity)
+  balanced_accuracy = cm_test$byClass["Balanced Accuracy"]
+  sensitivity = cm_test$byClass["Sensitivity"]
+  specificity = cm_test$byClass["Specificity"]
+  precision = cm_test$byClass["Pos Pred Value"]
+  f1_score = 2 * (precision * sensitivity) / (precision + sensitivity)
   
   # creating a datframe of metrics
   metrics_df = data.frame(
@@ -244,8 +244,8 @@ lolipop_plot_maker = function(model, test_data, model_type,
       plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
       axis.text.y = element_text(size = 13),
       axis.text.x = element_text(size = 13, vjust = 0.5),
-      axis.title.x = element_text(size = 14),
-      axis.title.y = element_text(size = 14),
+      axis.title.x = element_text(size = 13),
+      axis.title.y = element_text(size = 13),
       legend.text = element_text(size = 13)
     )
 }
@@ -295,11 +295,11 @@ get_metrics = function(model, test_data, model_type,
   # calculating performance metrics
   accuracy = cm_test$overall["Accuracy"]
   error = 1-accuracy
-  balanced_accuracy <- cm_test$byClass["Balanced Accuracy"]
-  sensitivity <- cm_test$byClass["Sensitivity"]
-  specificity <- cm_test$byClass["Specificity"]
-  precision <- cm_test$byClass["Pos Pred Value"]
-  f1_score <- 2 * (precision * sensitivity) / (precision + sensitivity)
+  balanced_accuracy = cm_test$byClass["Balanced Accuracy"]
+  sensitivity = cm_test$byClass["Sensitivity"]
+  specificity = cm_test$byClass["Specificity"]
+  precision = cm_test$byClass["Pos Pred Value"]
+  f1_score = 2 * (precision * sensitivity) / (precision + sensitivity)
   
   # creating a dataframe of metrics
   metrics_df = data.frame(
@@ -445,14 +445,14 @@ out_of_sample_heatmap_maker = function(model, test_data, model_type,
 }
 
 #-------------------------------------------------------------------------------
-get_custom_styles <- function(df, best_idxs) {
-  styles <- vector("list", nrow(df))
+get_custom_styles = function(df, best_idxs) {
+  styles = vector("list", nrow(df))
   for (i in seq_len(nrow(df))) {
-    row_styles <- rep(NA, ncol(df))
-    row_styles[best_idxs[i] + 1] <- "background-color: #b7e4c7; font-weight: bold;"  # +1 for offset (skip 'metric')
-    styles[[i]] <- row_styles
+    row_styles = rep(NA, ncol(df))
+    row_styles[best_idxs[i] + 1] = "background-color: #b7e4c7; font-weight: bold;"  # +1 for offset (skip 'metric')
+    styles[[i]] = row_styles
   }
-  names(styles) <- NULL
+  names(styles) = NULL
   return(styles)
 }
 #-------------------------------------------------------------------------------
@@ -809,7 +809,7 @@ ui = page_navbar(
                                   "Number of models in the ensemble",
                                   min = 1,
                                   max = 100,
-                                  value = 10
+                                  value = 3
                       )
                     ), "Number of boosting rounds (trees) to train. Each round 
                     adds a new tree to correct previous errors. More rounds can
@@ -940,7 +940,7 @@ server = function(input, output, session){
                       "female, male",
                       "age in years (or fractions of a year, for children)",
                       "1st, 2nd, 3rd",
-                      "number of siblings aboard",
+                      "number of siblings or spouses aboard",
                       "number of parents or children aboard")
     )
   },
@@ -1138,10 +1138,10 @@ server = function(input, output, session){
     predict(knn_model, newdata = df_test_X)[, 1]
   })
   
-  test_labels <- df_test$survived
+  test_labels = df_test$survived
   
   # calculating decision tree probabilites
-  tree_probs <- reactive({
+  tree_probs = reactive({
     predict(tree(), newdata = df_test, type = "prob")[, 2]
   })
   
@@ -1164,12 +1164,12 @@ server = function(input, output, session){
     attr(preds_temp, "probabilities")[,2]
   })
   
-  xgb_probs <- reactive({
+  xgb_probs = reactive({
     predict(xgb(), newdata = xgboost_test)
   })
   
   roc_list = reactive({
-    roc_values <- list(
+    roc_values = list(
       "Decision Tree" = suppressMessages(roc(test_labels, tree_probs())),
       "Random Forest" = suppressMessages(roc(test_labels, rf_probs())),
       "Logistic Regression" = suppressMessages(roc(test_labels, lr_probs())),
@@ -1181,8 +1181,8 @@ server = function(input, output, session){
   
   output$roc_plot = renderPlot({
     # Convert ROC data to a combined data frame
-    roc_df <- do.call(rbind, lapply(names(roc_list()), function(name) {
-      r <- roc_list()[[name]]
+    roc_df = do.call(rbind, lapply(names(roc_list()), function(name) {
+      r = roc_list()[[name]]
       data.frame(
         FPR = rev(1 - r$specificities),
         TPR = rev(r$sensitivities),
@@ -1202,7 +1202,7 @@ server = function(input, output, session){
       theme(
         plot.title = element_text(hjust = 0.5, face = "bold", size = 24), 
         axis.title.x = element_text(size = 14, vjust = -1),
-        axis.title.y = element_text(size = 14, vjust = 3),
+        axis.title.y = element_text(size = 14, vjust = 1.5),
         axis.text.x = element_text(size = 14),
         axis.text.y = element_text(size = 14),
         legend.text = element_text(size = 14),  
