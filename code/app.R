@@ -92,18 +92,6 @@ accuracy_plot_maker = function(xgb_model){
   metric_df_long = metric_df |>
     pivot_longer(cols = c(Train, Test), names_to = "Dataset",
                  values_to = "Accuracy")
-  # plot = ggplot(metric_df_long, aes(x = Round, y = Accuracy, group = Dataset)) + 
-  #   geom_line() + 
-  #   labs(title = "")
-  #   theme(
-  #     plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
-  #     axis.text.y = element_text(size = 13),
-  #     axis.text.x = element_text(size = 13),
-  #     axis.title.x = element_text(size = 14),
-  #     axis.title.y = element_text(size = 14),
-  #     legend.text = element_text(size = 12),
-  #     legend.title = element_text(size = 15)
-  #   )
   plot = ggplot(metric_df_long, aes(x = Round, y = Accuracy, color = Dataset)) +
     geom_line(size = 1.2) +
     scale_x_continuous(
@@ -126,8 +114,6 @@ accuracy_plot_maker = function(xgb_model){
       legend.text = element_text(size = 12),
       legend.title = element_text(size = 15)
     )
-  
-  return(plot)
   
   plot
 }
@@ -954,8 +940,8 @@ server = function(input, output, session){
                       "female, male",
                       "age in years (or fractions of a year, for children)",
                       "1st, 2nd, 3rd",
-                      "number of siblings aboard, integer",
-                      "number of parents or children aboard, integer")
+                      "number of siblings aboard",
+                      "number of parents or children aboard")
     )
   },
   options = list(
